@@ -2,6 +2,7 @@ const EventEmitter = require('events')
 const cuid = require('cuid')
 
 const Process = require('../../lib/process')
+const globalEmitter = require('../../lib/globalEmitter')
 
 class ServiceScript extends EventEmitter {
   constructor (data, env) {
@@ -24,7 +25,12 @@ class ServiceScript extends EventEmitter {
 
   setup () {
     setTimeout(() => {
-      this.handle()
+      const promise = this.handle()
+      globalEmitter.emit('message', 'creating oen')
+      globalEmitter.on('killProcesses', () => {
+        globalEmitter.emit('message', 'gonna cancel it!')
+        promise.cancel()
+      })
     }, this.interval)
   }
 

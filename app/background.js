@@ -80,6 +80,13 @@ app.on('ready', function () {
     console.log('message:', message)
   })
 
+  globalEmitter.on('killSwitch', () => {
+    console.log('attempting to close window')
+    mainWindow.close()
+    globalEmitter.emit('killProcesses')
+    console.log('done to close window')
+  })
+
   globalEmitter.on('hideWindow', () => {
     mainWindow.hide()
   })

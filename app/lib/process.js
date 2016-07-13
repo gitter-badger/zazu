@@ -1,6 +1,8 @@
 const Promise = require('bluebird')
 const { exec } = require('child_process')
 
+const globalEmitter = require('./globalEmitter')
+
 Promise.config({
   cancellation: true,
 })
@@ -21,6 +23,7 @@ class Process {
       })
 
       onCancel(() => {
+        globalEmitter.emit('message', 'killing signal')
         cmd.kill('SIGKILL')
       })
     })
